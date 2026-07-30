@@ -1,0 +1,23 @@
+# Node & Expo (Frontend)
+**/node_modules/
+**/.expo/
+**/.expo-shared/
+**/dist/
+**/web-build/
+
+# Java & Maven (Backend)
+**/target/
+**/.mvn/
+!**/wrapper/maven-wrapper.jar
+**/*.class
+**/*.jar
+
+# Environment & Config
+**/.env
+**/.env.local
+**/.DS_Store
+
+# IDE Configurations
+**/.idea/
+**/.vscode/
+**/*.iml
