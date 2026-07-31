@@ -1,26 +1,24 @@
-# Step 1: Build the application using JDK 17 / Maven
-FROM eclipse-temurin:17-jdk-alpine AS build
+# Step 1: Build the jar using Maven image
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 
-# Copy maven wrapper and pom.xml
-COPY mvnw .
-COPY .mvn .mvn
+# Copy pom.xml and download dependencies
 COPY pom.xml .
-COPY src src
+RUN mvn dependency:go-offline
 
-# Make Maven wrapper executable and build the application JAR file
-RUN chmod +x mvnw
-RUN ./mvnw clean package -DskipTests
+# Copy source code and build final jar file
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Step 2: Create runtime container
+# Step 2: Run the app using JDK runtime
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Copy jar from build stage
+# Copy built artifact from build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose port
+# Expose server port
 EXPOSE 8080
 
-# Run the app
+# Start application
 ENTRYPOINT ["java", "-jar", "app.jar"]
